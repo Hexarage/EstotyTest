@@ -6,7 +6,7 @@ ENV CGO_ENABLED 1
 WORKDIR /go/src/nakama-runtime
 
 COPY go.mod go.sum ./
-RUN go mod download
+RUN which go && go mod download
 
 COPY . .
 RUN go build --trimpath --buildmode=plugin -o nakama-runtime.so
