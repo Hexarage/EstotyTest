@@ -1,0 +1,16 @@
+FROM heroiclabs/nakama-pluginbuilder:3.22.0 AS builder
+
+ENV GO111MODULE on
+ENV CGO_ENABLED 1
+
+WORKDIR /go/src/nakama-runtime
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+RUN go build --trimpath --buildmode=plugin -o nakama-runtime.so
+
+FROM heroiclabs/nakama:3.22.0
+
+COPY --from=builder /go/src/nakama-runtime/nakama-runtime.so /nakama/data/modules/
